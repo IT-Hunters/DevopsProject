@@ -29,7 +29,7 @@ public class BlocServiceImpl implements IBlocService{
         return bloc;
     }
 
-    @Scheduled(cron= "*/2 * * * * *")
+   // @Scheduled(cron= "*/2 * * * * *")
     public void listeChambresParBloc(){
         List<Bloc> listB = blocRepository.findAll();
         for (Bloc bloc : listB) {

@@ -19,5 +19,12 @@ public class ReservationRestController {
                                                                  @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateFin) {
         return reservationService.getReservationParAnneeUniversitaire(dateDebut,dateFin);
     }
+
+@PostMapping("ajouterReservationEtAssignerAChambreEtAEtudiant/{numChambre}/{cin}")
+    public Reservation ajouterReservationEtAssignerAChambreEtAEtudiant(@RequestBody Reservation res,@PathVariable Long numChambre, @PathVariable long cin){
+        return reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(res,numChambre,cin);
+    }
+
+
 }
 

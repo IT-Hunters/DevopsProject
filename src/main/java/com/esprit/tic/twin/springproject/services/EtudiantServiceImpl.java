@@ -39,7 +39,7 @@ public class EtudiantServiceImpl implements IEtudiantService{
     //@Scheduled(fixedRate = 3000) chaque 3sec
     //@Scheduled(cron="*/60 * * * * *, zone="Europe/Istanbul") place du temps
     //@Scheduled(fixedDelay = 2000)
-    @Scheduled(cron = "* * 9 31 12 *")
+    //@Scheduled(cron = "* * 9 31 12 *")
     public void updateNouveauMontantInscriptionDesEtudiants(){
         HashMap<String,Float> calcHash = calculNouveauMontantInscriptionDesEtudiants();
         List <Etudiant> liste = etudiantRepository.findAll();

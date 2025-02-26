@@ -27,7 +27,7 @@ public class ChambreServiceImpl implements IChambreService{
     public long nbChambreParTypeEtBloc(TypeChambre type, long idBloc){
         return chambreRepository.findChambreByBloc_IdBlocAndAndTypeC(idBloc,type).toArray().length;
     }
-    @Scheduled(cron= "*/2 * * * * *")
+   // @Scheduled(cron= "*/2 * * * * *")
     public void pourcentageChambreParTypeChambre(){
         List<Chambre> listB = chambreRepository.findAll();
         float total = listB.stream().toArray().length;
@@ -37,7 +37,7 @@ public class ChambreServiceImpl implements IChambreService{
             if (i==1) log.info("Triple " + chambreRepository.getNbrTypeC(TypeChambre.TRIPLE)*100/total);
         }
     }
-    @Scheduled(cron= "*/2 * * * * *")
+   // @Scheduled(cron= "*/2 * * * * *")
     public void nbPlacesDisponiblesParChambreAnneeEnCours(){
         List<Chambre> listB = chambreRepository.findChambreByReservations_AnneeUniversitaire_Year(Year.now().getValue());
         listB.forEach( c -> {

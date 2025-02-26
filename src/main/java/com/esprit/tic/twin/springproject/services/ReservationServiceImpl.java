@@ -8,12 +8,17 @@ import com.esprit.tic.twin.springproject.repositories.ChambreRepository;
 import com.esprit.tic.twin.springproject.repositories.EtudiantRepository;
 import com.esprit.tic.twin.springproject.repositories.ReservationRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Year;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-
+@Slf4j
 @Service
 @AllArgsConstructor
 public class ReservationServiceImpl implements IReservationService {
@@ -27,26 +32,56 @@ public class ReservationServiceImpl implements IReservationService {
 
     @Override
     public Reservation ajouterReservationEtAssignerAChambreEtAEtudiant(Reservation res, Long numChambre, long cin) {
-        Chambre ch = chambreRepository.findByNumeroChambre(numChambre).orElse(null);
-       // int nbrResValid = chambreRepository.countRes(ch);
-        Etudiant et = etudiantRepository.findByCin(cin).orElse(null);
-        int Capacite = 0;
-        if (ch.getTypeC() == TypeChambre.SIMPLE) Capacite = 1;
-        if (ch.getTypeC() == TypeChambre.DOUBLE) Capacite = 2;
-        if (ch.getTypeC() == TypeChambre.TRIPLE) Capacite = 3;
-        if (res.getAnneeUniversitaire().getYear() == Year.now().getValue()
-    /*    &&
-                Capacite - nbrResValid >= 1*/
-        ) {
-            String id = numChambre + cin + res.getAnneeUniversitaire().toString();
-            res.setIdReservation(id);
-            List<Reservation> listR = ch.getReservations().stream().toList();
-            listR.add(res);
-            List<Reservation> listR1 = et.getReservations().stream().toList();
-            listR1.add(res);
+        log.info("Début de la méthode ajouterReservationEtAssignerAChambreEtAEtudiant");
+        log.info("Numéro de chambre : {}", numChambre);
+        log.info("CIN de l'étudiant : {}", cin);
 
+        // Recherche de la chambre
+        Chambre ch = chambreRepository.chercherParNumero(numChambre)
+                .orElseThrow(() -> new IllegalArgumentException("Chambre non trouvée avec le numéro : " + numChambre));
+        log.info("✅ Chambre trouvée : {}", ch);
+
+        // Recherche de l'étudiant
+        Etudiant et = etudiantRepository.findByCin(cin)
+                .orElseThrow(() -> new IllegalArgumentException("Étudiant non trouvé avec le CIN : " + cin));
+        log.info("✅ Étudiant trouvé : {}", et);
+
+        // Vérification de la capacité de la chambre
+        int capacite = switch (ch.getTypeC()) {
+            case SIMPLE -> 1;
+            case DOUBLE -> 2;
+            case TRIPLE -> 3;
+        };
+        log.info("Capacité de la chambre : {}", capacite);
+        log.info("Nombre de réservations actuelles : {}", ch.getReservations().size());
+
+        // Vérification de l'année universitaire
+        if (res.getAnneeUniversitaire().getYear() != Year.now().getValue()) {
+            throw new IllegalArgumentException("Année universitaire incorrecte : " + res.getAnneeUniversitaire().getYear());
         }
 
+        // Vérification de la capacité
+        if (ch.getReservations().size() >= capacite) {
+            throw new IllegalStateException("La chambre est déjà pleine !");
+        }
+
+        // Initialisation de l'attribut etudiants si nécessaire
+        if (res.getEtudiants() == null) {
+            res.setEtudiants(new HashSet<>());
+        }
+
+        // Ajout de l'étudiant à la réservation
+        res.getEtudiants().add(et);
+        reservationRepository.save(res);
+
+        // Mise à jour des associations bidirectionnelles
+        ch.getReservations().add(res);
+        chambreRepository.save(ch);
+
+        et.getReservations().add(res);
+        etudiantRepository.save(et);
+
+        log.info("✅ Réservation ajoutée avec succès : {}", res);
         return res;
     }
 
@@ -67,11 +102,13 @@ public class ReservationServiceImpl implements IReservationService {
 
     @Override
     public Reservation retrieveReservation(String idReservation) {
-        return reservationRepository.findById(idReservation).orElse(null);
+        return null;
     }
 
     @Override
     public void removeReservation(String idReservation) {
-        reservationRepository.deleteById(idReservation);
+
     }
+
+
 }
