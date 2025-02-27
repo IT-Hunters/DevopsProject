@@ -2,6 +2,8 @@ package com.esprit.tic.twin.springproject.services;
 
 import com.esprit.tic.twin.springproject.entities.Chambre;
 import java.util.List;
+import java.util.Map;
+
 import com.esprit.tic.twin.springproject.entities.TypeChambre;
 
 public interface IChambreService {
@@ -13,4 +15,5 @@ public interface IChambreService {
     void removeChambre(Long idChambre);
     List<Chambre> getChambresParNomBloc( String nomBloc);
     long nbChambreParTypeEtBloc( TypeChambre type, long idBloc) ;
+    public Map<String, Float> pourcentageChambreParTypeChambre();
 }

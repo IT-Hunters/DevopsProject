@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Year;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
 
@@ -28,16 +30,25 @@ public class ChambreServiceImpl implements IChambreService{
         return chambreRepository.findChambreByBloc_IdBlocAndAndTypeC(idBloc,type).toArray().length;
     }
    // @Scheduled(cron= "*/2 * * * * *")
-    public void pourcentageChambreParTypeChambre(){
-        List<Chambre> listB = chambreRepository.findAll();
-        float total = listB.stream().toArray().length;
-        for (int i=0;i<3;i++){
-            if (i==1) log.info("Simple " + chambreRepository.getNbrTypeC(TypeChambre.SIMPLE)*100/total);
-            if (i==1) log.info("Double " + chambreRepository.getNbrTypeC(TypeChambre.DOUBLE)*100/total);
-            if (i==1) log.info("Triple " + chambreRepository.getNbrTypeC(TypeChambre.TRIPLE)*100/total);
-        }
-    }
-   // @Scheduled(cron= "*/2 * * * * *")
+   public Map<String, Float> pourcentageChambreParTypeChambre() {
+       Map<String, Float> map = new HashMap<>();
+       List<Chambre> listB = chambreRepository.findAll();
+       float total = listB.size(); // Plus simple pour obtenir la taille de la liste
+
+       if (total == 0) return map; // Évite la division par zéro
+
+       // Calcul du pourcentage pour chaque type de chambre
+       map.put("SIMPLE", (chambreRepository.getNbrTypeC(TypeChambre.SIMPLE) * 100) / total);
+       map.put("DOUBLE", (chambreRepository.getNbrTypeC(TypeChambre.DOUBLE) * 100) / total);
+       map.put("TRIPLE", (chambreRepository.getNbrTypeC(TypeChambre.TRIPLE) * 100) / total);
+
+       return map;
+   }
+
+
+
+
+    @Scheduled(cron= "*/2 * * * * *")
     public void nbPlacesDisponiblesParChambreAnneeEnCours(){
         List<Chambre> listB = chambreRepository.findChambreByReservations_AnneeUniversitaire_Year(Year.now().getValue());
         listB.forEach( c -> {

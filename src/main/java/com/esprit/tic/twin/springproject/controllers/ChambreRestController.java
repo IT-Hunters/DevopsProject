@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/chambre")
@@ -20,5 +21,9 @@ public class ChambreRestController {
     @GetMapping("/nbChambreParTypeEtBloc/{type}/{idBloc}")
     public long nbChambreParTypeEtBloc(@PathVariable TypeChambre type, @PathVariable long idBloc){
         return chambreService.nbChambreParTypeEtBloc(type,idBloc);
+    }
+    @GetMapping("/pourcentageChambreParTypeChambre")
+    public Map<String, Float> pourcentageChambreParTypeChambre(){
+        return chambreService.pourcentageChambreParTypeChambre();
     }
 }

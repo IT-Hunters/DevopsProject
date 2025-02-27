@@ -27,4 +27,8 @@ public class Chambre implements Serializable {
     Bloc bloc;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<Reservation> reservations;
+    public Chambre(Long idChambre, TypeChambre typeC) {
+        this.idChambre = idChambre;
+        this.typeC = typeC;
+    }
 }

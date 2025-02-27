@@ -7,6 +7,8 @@ import com.esprit.tic.twin.springproject.entities.TypeChambre;
 import com.esprit.tic.twin.springproject.repositories.ChambreRepository;
 import com.esprit.tic.twin.springproject.repositories.EtudiantRepository;
 import com.esprit.tic.twin.springproject.repositories.ReservationRepository;
+import com.esprit.tic.twin.springproject.services.ChambreServiceImpl;
+import com.esprit.tic.twin.springproject.services.IChambreService;
 import com.esprit.tic.twin.springproject.services.ReservationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,36 +16,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
-import java.time.Year;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
+
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.Year;
-import java.util.HashSet;
-import java.util.Optional;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-
-
 @SpringBootTest
 class DEvopsProjectApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
 	@Mock
 	private ChambreRepository chambreRepository;
-
+	@InjectMocks
+	private ChambreServiceImpl chambreService;
 	@Mock
 	private EtudiantRepository etudiantRepository;
 
@@ -59,17 +48,16 @@ class DEvopsProjectApplicationTests {
 
 	@BeforeEach
 	void setUp() {
-		// Initialisation des objets pour les tests
 		chambre = new Chambre();
 		chambre.setIdChambre(1L);
 		chambre.setNumeroChambre(101L);
-		chambre.setTypeC(TypeChambre.DOUBLE); // Capacité = 2
-		chambre.setReservations(new HashSet<>()); // Initialisation de la collection
+		chambre.setTypeC(TypeChambre.DOUBLE);
+		chambre.setReservations(new HashSet<>());
 
 		etudiant = new Etudiant();
 		etudiant.setIdEtudiant(1L);
 		etudiant.setCin(12345678L);
-		etudiant.setReservations(new HashSet<>()); // Initialisation de la collection
+		etudiant.setReservations(new HashSet<>());
 
 		reservation = new Reservation();
 		reservation.setIdReservation("1");
@@ -79,23 +67,108 @@ class DEvopsProjectApplicationTests {
 
 	@Test
 	void testAjouterReservationEtAssignerAChambreEtAEtudiant_Success() {
-		// Arrange
-		when(chambreRepository.chercherParNumero(101L)).thenReturn(Optional.of(chambre)); // Simulation de la recherche de chambre
-		when(etudiantRepository.findByCin(12345678L)).thenReturn(Optional.of(etudiant)); // Simulation de la recherche d'étudiant
-		when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation); // Simulation de la sauvegarde de réservation
+		when(chambreRepository.chercherParNumero(101L)).thenReturn(Optional.of(chambre));
+		when(etudiantRepository.findByCin(12345678L)).thenReturn(Optional.of(etudiant));
+		when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
 
-		// Act
 		Reservation result = reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(reservation, 101L, 12345678L);
 
-		// Assert (vérifications avec Mockito)
-		verify(chambreRepository, times(1)).chercherParNumero(101L); // Vérification que la méthode a été appelée
-		verify(etudiantRepository, times(1)).findByCin(12345678L); // Vérification que la méthode a été appelée
-		verify(reservationRepository, times(1)).save(reservation); // Vérification que la méthode a été appelée
+		System.out.println("Test AjouterReservationEtAssignerAChambreEtAEtudiant  Succès");
+		System.out.println("Résultat: " + result);
 
-		// Vérification de l'interaction supplémentaire avec chambreRepository (si nécessaire)
-		verify(chambreRepository, times(1)).save(chambre); // Ajoutez cette ligne si la méthode save est appelée sur chambreRepository
-
-		// Si vous utilisez verifyNoMoreInteractions, assurez-vous que toutes les interactions sont vérifiées
-		// verifyNoMoreInteractions(chambreRepository, etudiantRepository, reservationRepository); // Décommentez si nécessaire
+		verify(chambreRepository, times(1)).chercherParNumero(101L);
+		verify(etudiantRepository, times(1)).findByCin(12345678L);
+		verify(reservationRepository, times(1)).save(reservation);
+		verify(chambreRepository, times(1)).save(chambre);
 	}
+
+	@Test
+	void testGetReservationParAnneeUniversitaire() {
+		Date dateDebut = java.sql.Date.valueOf(LocalDate.of(2022, 10, 1));
+		Date dateFin = java.sql.Date.valueOf(LocalDate.of(2023, 9, 30));
+		Reservation reservation1 = new Reservation();
+		reservation1.setIdReservation("1");
+		reservation1.setAnneeUniversitaire(LocalDate.of(2022, 11, 15));
+		Reservation reservation2 = new Reservation();
+		reservation2.setIdReservation("2");
+		reservation2.setAnneeUniversitaire(LocalDate.of(2023, 6, 20));
+		Reservation reservation3 = new Reservation();
+		reservation3.setIdReservation("3");
+		reservation3.setAnneeUniversitaire(LocalDate.of(2024, 2, 10));
+		when(reservationRepository.findByAnneeUniversitaireBetween(dateDebut, dateFin))
+				.thenReturn(Arrays.asList(reservation1, reservation2));
+		List<Reservation> result = reservationService.getReservationParAnneeUniversitaire(dateDebut, dateFin);
+		System.out.println("Test GetReservationParAnneeUniversitaire  Succès");
+		System.out.println("Nombre de réservations trouvées: " + result.size());
+		result.forEach(r -> System.out.println("Réservation: " + r.getIdReservation() + " Date: " + r.getAnneeUniversitaire()));
+		assertEquals(2, result.size());
+		assertTrue(result.contains(reservation1));
+		assertTrue(result.contains(reservation2));
+		assertFalse(result.contains(reservation3));
+
+		verify(reservationRepository, times(1)).findByAnneeUniversitaireBetween(dateDebut, dateFin);
+	}
+
+	@Test
+	void testPourcentageChambreParTypeChambre() {
+		// Arrange
+		// Simuler le comportement de chambreRepository.findAll()
+		List<Chambre> chambres = Arrays.asList(
+				new Chambre(1L, TypeChambre.SIMPLE),
+				new Chambre(2L, TypeChambre.DOUBLE),
+				new Chambre(3L, TypeChambre.TRIPLE),
+				new Chambre(4L, TypeChambre.SIMPLE)
+		);
+		when(chambreRepository.findAll()).thenReturn(chambres);
+
+		// Simuler le comportement de chambreRepository.getNbrTypeC()
+		when(chambreRepository.getNbrTypeC(TypeChambre.SIMPLE)).thenReturn(2.0F); // 2 chambres SIMPLE
+		when(chambreRepository.getNbrTypeC(TypeChambre.DOUBLE)).thenReturn(1.0F); // 1 chambre DOUBLE
+		when(chambreRepository.getNbrTypeC(TypeChambre.TRIPLE)).thenReturn(1.0F); // 1 chambre TRIPLE
+
+		// Act
+		Map<String, Float> result = chambreService.pourcentageChambreParTypeChambre();
+
+		// Assert
+		Map<String, Float> expected = new HashMap<>();
+		expected.put("SIMPLE", 50.0f);
+		expected.put("DOUBLE", 25.0f);
+		expected.put("TRIPLE", 25.0f);
+
+		assertEquals(expected, result, "Les pourcentages doivent correspondre aux valeurs attendues");
+
+		// Afficher le résultat dans la console
+		System.out.println("Pourcentage des chambres par type: " + result);
+
+		// Vérification des appels aux méthodes du repository
+		verify(chambreRepository, times(1)).findAll();
+		verify(chambreRepository, times(1)).getNbrTypeC(TypeChambre.SIMPLE);
+		verify(chambreRepository, times(1)).getNbrTypeC(TypeChambre.DOUBLE);
+		verify(chambreRepository, times(1)).getNbrTypeC(TypeChambre.TRIPLE);
+	}
+
+
+
+	@Test
+	void testPourcentageChambreParTypeChambre_AucuneChambre() {
+		// Arrange
+		// Simuler une liste vide de chambres
+		when(chambreRepository.findAll()).thenReturn(List.of());
+
+		// Act
+		Map<String, Float> result = chambreService.pourcentageChambreParTypeChambre();
+
+		// Assert
+		Map<String, Float> expected = new HashMap<>();
+		assertEquals(expected, result, "La map doit être vide si aucune chambre n'existe");
+
+		// Vérification des appels aux méthodes du repository
+		verify(chambreRepository, times(1)).findAll();
+		verify(chambreRepository, never()).getNbrTypeC(any()); // Aucun appel à getNbrTypeC
+	}
+
+
+
+
+
 }
