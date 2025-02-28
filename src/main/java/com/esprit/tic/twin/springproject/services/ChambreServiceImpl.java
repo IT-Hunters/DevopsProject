@@ -1,22 +1,15 @@
 package com.esprit.tic.twin.springproject.services;
 
-import com.esprit.tic.twin.springproject.entities.Bloc;
 import com.esprit.tic.twin.springproject.entities.Chambre;
-import com.esprit.tic.twin.springproject.entities.Foyer;
 import com.esprit.tic.twin.springproject.entities.TypeChambre;
-import com.esprit.tic.twin.springproject.repositories.BlocRepository;
 import com.esprit.tic.twin.springproject.repositories.ChambreRepository;
-import com.esprit.tic.twin.springproject.repositories.FoyerRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
-
-import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -28,7 +21,7 @@ public class ChambreServiceImpl implements IChambreService{
         return chambreRepository.findChambreByBloc_IdBlocAndAndTypeC(idBloc,type).toArray().length;
     }
    // @Scheduled(cron= "*/2 * * * * *")
-    public void pourcentageChambreParTypeChambre(){
+    public Map<String, Float> pourcentageChambreParTypeChambre(){
         List<Chambre> listB = chambreRepository.findAll();
         float total = listB.stream().toArray().length;
         for (int i=0;i<3;i++){
@@ -36,6 +29,7 @@ public class ChambreServiceImpl implements IChambreService{
             if (i==1) log.info("Double " + chambreRepository.getNbrTypeC(TypeChambre.DOUBLE)*100/total);
             if (i==1) log.info("Triple " + chambreRepository.getNbrTypeC(TypeChambre.TRIPLE)*100/total);
         }
+        return null;
     }
    // @Scheduled(cron= "*/2 * * * * *")
     public void nbPlacesDisponiblesParChambreAnneeEnCours(){
