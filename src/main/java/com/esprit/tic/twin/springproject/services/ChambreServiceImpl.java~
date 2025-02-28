@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
 
@@ -80,4 +81,29 @@ public class ChambreServiceImpl implements IChambreService{
     public void removeChambre(Long idChambre) {
         chambreRepository.deleteById(idChambre);
     }
-}
+
+    public List<Chambre> findAvailableChambresForCapacity(int minCapacity, TypeChambre type) {
+        if (minCapacity < 0) {
+            throw new IllegalArgumentException("La capacité minimale ne peut pas être négative");
+        }
+
+        // Récupérer toutes les chambres (avec ou sans réservations)
+        List<Chambre> chambres = chambreRepository.findAll();
+
+        // Filtrer par type et capacité disponible pour l'année en cours
+        return chambres.stream()
+                .filter(chambre -> chambre.getTypeC() == type)
+                .filter(chambre -> {
+                    int maxPlaces = switch (chambre.getTypeC()) {
+                        case SIMPLE -> 1;
+                        case DOUBLE -> 2;
+                        case TRIPLE -> 3;
+                    };
+                    // Compter uniquement les réservations validées pour cette année
+                    int reservedPlaces = (int) chambre.getReservations().stream()
+                            .filter(res -> res.getAnneeUniversitaire().getYear() == Year.now().getValue() && res.isEstValide())
+                            .count();
+                    return (maxPlaces - reservedPlaces) >= minCapacity;
+                })
+                .collect(Collectors.toList());
+    }}
