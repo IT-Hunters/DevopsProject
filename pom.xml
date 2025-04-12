@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.esprit.tic.twin</groupId>
     <artifactId>SpringProject</artifactId>
-    <version>1.0.0</version> <!-- Changé pour éviter le conflit Nexus -->
+    <version>1.0.1</version> <!-- Changé pour éviter le conflit Nexus -->
     <name>SpringProject</name>
     <description>SpringProject</description>
     <url/>
