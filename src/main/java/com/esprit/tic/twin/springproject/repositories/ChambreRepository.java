@@ -19,8 +19,8 @@ public interface ChambreRepository extends JpaRepository<Chambre, Long> {
     Optional<Chambre> findByNumeroChambre(Long numeroChambre);
     @Query("SELECT c FROM Chambre c WHERE c.numeroChambre = :numChambre")
     Optional<Chambre> chercherParNumero(@Param("numChambre") Long numChambre);
-   /* @Query("SELECT count() FROM Chambre c JOIN Reservation r WHERE r.estValide=true AND c=:ch")
-    int countRes(@Param("ch") Chambre ch);*/
+    /* @Query("SELECT count() FROM Chambre c JOIN Reservation r WHERE r.estValide=true AND c=:ch")
+     int countRes(@Param("ch") Chambre ch);*/
     List<Chambre> findByBlocCapaciteBlocGreaterThanAndBlocNomBloc(Long x, String nom);
     List<Chambre> findChambreByBloc_IdBlocAndAndTypeC( long idBloc, TypeChambre type) ;
     List<Chambre> findChambreByBloc(Bloc bloc) ;

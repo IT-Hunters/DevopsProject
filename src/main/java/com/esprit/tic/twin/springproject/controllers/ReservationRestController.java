@@ -20,7 +20,7 @@ public class ReservationRestController {
         return reservationService.getReservationParAnneeUniversitaire(dateDebut,dateFin);
     }
 
-@PostMapping("ajouterReservationEtAssignerAChambreEtAEtudiant/{numChambre}/{cin}")
+    @PostMapping("ajouterReservationEtAssignerAChambreEtAEtudiant/{numChambre}/{cin}")
     public Reservation ajouterReservationEtAssignerAChambreEtAEtudiant(@RequestBody Reservation res,@PathVariable Long numChambre, @PathVariable long cin){
         return reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(res,numChambre,cin);
     }
