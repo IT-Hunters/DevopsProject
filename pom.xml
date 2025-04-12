@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.esprit.tic.twin</groupId>
     <artifactId>SpringProject</artifactId>
-    <version>1.0.1</version> <!-- Changé pour éviter le conflit Nexus -->
+    <version>1.0.0</version> <!-- Changé pour éviter le conflit Nexus -->
     <name>SpringProject</name>
     <description>SpringProject</description>
     <url/>
@@ -132,6 +132,26 @@
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.11.0.3922</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*MockTest.java</include>
+                    </includes>
+                    <!-- Ensure tests run reliably -->
+                    <argLine>-Xmx512m</argLine>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>5.10.2</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
