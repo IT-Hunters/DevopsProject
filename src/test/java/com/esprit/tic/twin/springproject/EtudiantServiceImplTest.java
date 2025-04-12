@@ -16,6 +16,43 @@ import java.util.Calendar;
 import java.util.Date;
 
 @SpringBootTest
-public class EtudiantServiceImplTest {
+public class EtudiantServiceImplTest {/*
 
+    @Autowired
+    private EtudiantServiceImpl etudiantService; // Autowire the service you're testing
+
+
+
+    // The method to test
+    private TypeEtudiant assignTypeBasedOnAge(Date birthDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(birthDate);
+        int birthYear = cal.get(Calendar.YEAR);
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        int age = currentYear - birthYear;
+
+        return age > 20 ? TypeEtudiant.RESPONSABLE : TypeEtudiant.ORDINARE;
+    }
+
+    @Test
+    public void testAssignTypeBasedOnAge_OlderThan20() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, -25); // 25 years old
+        Date birthDate = cal.getTime();
+
+        TypeEtudiant result = assignTypeBasedOnAge(birthDate);
+        assertEquals(TypeEtudiant.RESPONSABLE, result);
+    }
+
+    @Test
+    public void testAssignTypeBasedOnAge_YoungerThan20() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, -18); // 18 years old
+        Date birthDate = cal.getTime();
+
+        TypeEtudiant result = assignTypeBasedOnAge(birthDate);
+        assertEquals(TypeEtudiant.ORDINARE, result);
+    }
+*/
+    // You can add additional tests based on service methods if needed.
 }
