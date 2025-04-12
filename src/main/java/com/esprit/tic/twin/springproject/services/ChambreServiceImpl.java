@@ -8,52 +8,71 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Year;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @AllArgsConstructor
 @Slf4j
-public class ChambreServiceImpl implements IChambreService{
+public class ChambreServiceImpl implements IChambreService {
     ChambreRepository chambreRepository;
-    @Override
-    public long nbChambreParTypeEtBloc(TypeChambre type, long idBloc){
-        return chambreRepository.findChambreByBloc_IdBlocAndAndTypeC(idBloc,type).toArray().length;
-    }
-   // @Scheduled(cron= "*/2 * * * * *")
-    public Map<String, Float> pourcentageChambreParTypeChambre(){
-        List<Chambre> listB = chambreRepository.findAll();
-        float total = listB.stream().toArray().length;
-        for (int i=0;i<3;i++){
-            if (i==1) log.info("Simple " + chambreRepository.getNbrTypeC(TypeChambre.SIMPLE)*100/total);
-            if (i==1) log.info("Double " + chambreRepository.getNbrTypeC(TypeChambre.DOUBLE)*100/total);
-            if (i==1) log.info("Triple " + chambreRepository.getNbrTypeC(TypeChambre.TRIPLE)*100/total);
-        }
-        return null;
-    }
-   // @Scheduled(cron= "*/2 * * * * *")
-    public void nbPlacesDisponiblesParChambreAnneeEnCours(){
-        List<Chambre> listB = chambreRepository.findChambreByReservations_AnneeUniversitaire_Year(Year.now().getValue());
-        listB.forEach( c -> {
-            int places = 0;
-            if (c.getTypeC() == TypeChambre.SIMPLE ) {  places = 1 - c.getReservations().toArray().length;}
-            if (c.getTypeC() == TypeChambre.DOUBLE ) {  places = 2 - c.getReservations().toArray().length;}
-            if (c.getTypeC() == TypeChambre.TRIPLE ) {  places = 3 - c.getReservations().toArray().length;}
-            log.info("Nb de place restants pour l'année " + Year.now()
-                    + "Chambre : " + c.getNumeroChambre()
-                    + "est egale a: " + places);
-        });
 
+    @Override
+    public long nbChambreParTypeEtBloc(TypeChambre type, long idBloc) {
+        return chambreRepository.findChambreByBloc_IdBlocAndTypeC(idBloc, type).size();
     }
+
+    @Override
+    public Map<String, Float> pourcentageChambreParTypeChambre() {
+        List<Chambre> chambres = chambreRepository.findAll();
+        float total = chambres.size();
+        if (total == 0) {
+            return Map.of(
+                    TypeChambre.SIMPLE.name(), 0f,
+                    TypeChambre.DOUBLE.name(), 0f,
+                    TypeChambre.TRIPLE.name(), 0f
+            );
+        }
+        Float simpleCount = chambreRepository.getNbrTypeC(TypeChambre.SIMPLE);
+        Float doubleCount = chambreRepository.getNbrTypeC(TypeChambre.DOUBLE);
+        Float tripleCount = chambreRepository.getNbrTypeC(TypeChambre.TRIPLE);
+
+        Map<String, Float> result = new HashMap<>();
+        result.put(TypeChambre.SIMPLE.name(), (simpleCount * 100) / total);
+        result.put(TypeChambre.DOUBLE.name(), (doubleCount * 100) / total);
+        result.put(TypeChambre.TRIPLE.name(), (tripleCount * 100) / total);
+
+        log.info("Simple: {}%", result.get(TypeChambre.SIMPLE.name()));
+        log.info("Double: {}%", result.get(TypeChambre.DOUBLE.name()));
+        log.info("Triple: {}%", result.get(TypeChambre.TRIPLE.name()));
+
+        return result;
+    }
+
+    @Override
+    public void nbPlacesDisponiblesParChambreAnneeEnCours() {
+        List<Chambre> chambres = chambreRepository.findChambreByReservations_AnneeUniversitaire_Year(Year.now().getValue());
+        chambres.forEach(c -> {
+            int places = switch (c.getTypeC()) {
+                case SIMPLE -> 1 - c.getReservations().size();
+                case DOUBLE -> 2 - c.getReservations().size();
+                case TRIPLE -> 3 - c.getReservations().size();
+            };
+            log.info("Chambre {} has {} places available for year {}",
+                    c.getNumeroChambre(), places, Year.now().getValue());
+        });
+    }
+
     @Override
     public List<Chambre> retrieveAllChambres() {
         return chambreRepository.findAll();
     }
+
     @Override
-    public List<Chambre> getChambresParNomBloc( String nomBloc){
+    public List<Chambre> getChambresParNomBloc(String nomBloc) {
         return chambreRepository.findChambreByBloc_NomBloc(nomBloc);
     }
-
 
     @Override
     public Chambre addChambre(Chambre c) {
@@ -73,5 +92,24 @@ public class ChambreServiceImpl implements IChambreService{
     @Override
     public void removeChambre(Long idChambre) {
         chambreRepository.deleteById(idChambre);
+    }
+
+    @Override
+    public List<Chambre> findAvailableChambresForCapacity(int minCapacity, TypeChambre type) {
+        if (minCapacity < 0) {
+            throw new IllegalArgumentException("La capacité minimale ne peut pas être négative");
+        }
+        List<Chambre> chambres = chambreRepository.findChambreByTypeC(type);
+        return chambres.stream()
+                .filter(chambre -> {
+                    int maxCapacity = switch (chambre.getTypeC()) {
+                        case SIMPLE -> 1;
+                        case DOUBLE -> 2;
+                        case TRIPLE -> 3;
+                    };
+                    int reserved = chambre.getReservations().size();
+                    return (maxCapacity - reserved) >= minCapacity;
+                })
+                .toList();
     }
 }

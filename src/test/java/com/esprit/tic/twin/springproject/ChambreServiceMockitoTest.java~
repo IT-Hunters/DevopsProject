@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -38,6 +39,7 @@ public class ChambreServiceMockitoTest {
         chambre1.setTypeC(TypeChambre.TRIPLE);
         Reservation res1 = new Reservation();
         res1.setIdReservation("R1");
+        res1.setDateReservation(LocalDate.now());
         res1.setEstValide(true);
         chambre1.setReservations(Set.of(res1)); // 1 reservation, 2 places available
 
@@ -46,12 +48,15 @@ public class ChambreServiceMockitoTest {
         chambre2.setTypeC(TypeChambre.TRIPLE);
         Reservation res2a = new Reservation();
         res2a.setIdReservation("R2a");
+        res2a.setDateReservation(LocalDate.now());
         res2a.setEstValide(true);
         Reservation res2b = new Reservation();
         res2b.setIdReservation("R2b");
+        res2b.setDateReservation(LocalDate.now());
         res2b.setEstValide(true);
         Reservation res2c = new Reservation();
         res2c.setIdReservation("R2c");
+        res2c.setDateReservation(LocalDate.now());
         res2c.setEstValide(true);
         chambre2.setReservations(Set.of(res2a, res2b, res2c)); // 3 reservations, 0 places available
 
