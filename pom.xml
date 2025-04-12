@@ -13,30 +13,18 @@
     <version>1.0.0</version>
     <name>SpringProject</name>
     <description>SpringProject</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
     <properties>
         <java.version>17</java.version>
         <jacoco.version>0.8.12</jacoco.version>
+        <h2.version>2.2.224</h2.version> <!-- Explicit H2 version -->
+        <!-- SonarQube properties -->
+        <sonar.projectKey>SpringProject</sonar.projectKey>
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.login>10fd0995c1100b693c25dcf906ae4a74f906b460</sonar.login>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-        <!-- SonarQube Properties -->
-        <sonar.projectKey>foyer</sonar.projectKey>
-        <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.token>10fd0995c1100b693c25dcf906ae4a74f906b460</sonar.token> <!-- Added SonarQube token -->
-        <sonar.exclusions>**/test/**</sonar.exclusions> <!-- Exclude test files from analysis -->
-        <sonar.java.binaries>target/classes</sonar.java.binaries> <!-- Path to compiled classes -->
+        <sonar.exclusions>**/test/**</sonar.exclusions>
+        <sonar.java.binaries>target/classes</sonar.java.binaries>
         <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
     </properties>
     <dependencies>
@@ -48,7 +36,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
@@ -69,24 +56,17 @@
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
-
-
-
-        <!-- Ajout de H2 pour les tests -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -101,6 +81,7 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <!-- JaCoCo Plugin for Code Coverage -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -114,13 +95,13 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>verify</phase>
+                        <phase>test</phase> <!-- Changed to test to align with colleague -->
                         <goals>
                             <goal>report</goal>
                         </goals>
                         <configuration>
                             <formats>
-                                <format>XML</format> <!-- For SonarQube -->
+                                <format>XML</format>
                             </formats>
                         </configuration>
                     </execution>
@@ -131,6 +112,26 @@
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.11.0.3922</version>
+            </plugin>
+            <!-- Surefire Plugin for Test Execution -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*MockTest.java</include>
+                    </includes>
+                    <argLine>-Xmx512m</argLine>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>5.10.2</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
