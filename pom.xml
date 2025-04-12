@@ -26,7 +26,19 @@
         <tag/>
         <url/>
     </scm>
-    
+    <properties>
+        <java.version>17</java.version>
+        <jacoco.version>0.8.12</jacoco.version>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <!-- SonarQube Properties -->
+        <sonar.projectKey>foyer</sonar.projectKey>
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.token>10fd0995c1100b693c25dcf906ae4a74f906b460</sonar.token> <!-- Added SonarQube token -->
+        <sonar.exclusions>**/test/**</sonar.exclusions> <!-- Exclude test files from analysis -->
+        <sonar.java.binaries>target/classes</sonar.java.binaries> <!-- Path to compiled classes -->
+        <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
