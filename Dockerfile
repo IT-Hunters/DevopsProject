@@ -9,7 +9,8 @@ FROM openjdk:17-jdk-alpine
 
 WORKDIR /app
 
-COPY --from=build /app/target/SpringProject-1.0.2.jar app.jar
+
+COPY --from=build /app/target/SpringProject-1.0.2-SNAPSHOT.jar app.jar
 EXPOSE 8089
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
