@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,15 +17,25 @@ import java.util.stream.Collectors;
 public class TacheServiceImpl implements ITacheService{
     TacheRepository tacheRepository;
     EtudiantRepository etudiantRepository;
-    public List<Tache> addTasksAndAffectToEtudiant (List<Tache> tasks, String nomEt, String prenomEt ){
+    public List<Tache> addTasksAndAffectToEtudiant(List<Tache> tasks, String nomEt, String prenomEt) {
         tacheRepository.saveAll(tasks);
-        Etudiant et =  etudiantRepository.findEtudiantByNomEtAndPrenomEt(nomEt,prenomEt).get();
-        List<Tache> Oldtaches = new ArrayList<>(et.getTaches().stream().toList());
-        Oldtaches.addAll(tasks);
-        et.setTaches(Oldtaches.stream().collect(Collectors.toSet()));
-        etudiantRepository.save(et);
-        return et.getTaches().stream().toList();
+
+        Optional<Etudiant> optionalEtudiant = etudiantRepository.findEtudiantByNomEtAndPrenomEt(nomEt, prenomEt);
+        if (optionalEtudiant.isEmpty()) {
+            throw new IllegalArgumentException("Etudiant avec nom: " + nomEt + " et prénom: " + prenomEt + " non trouvé.");
+        }
+
+        Etudiant etudiant = optionalEtudiant.get();
+
+        List<Tache> oldTaches = new ArrayList<>(etudiant.getTaches().stream().toList());
+        oldTaches.addAll(tasks);
+        etudiant.setTaches(oldTaches.stream().collect(Collectors.toSet()));
+
+        etudiantRepository.save(etudiant);
+
+        return etudiant.getTaches().stream().toList();
     }
+
     @Override
     public List<Tache> retrieveAllTaches() {
         return tacheRepository.findAll();

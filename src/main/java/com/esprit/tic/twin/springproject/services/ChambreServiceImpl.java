@@ -8,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Year;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -20,17 +20,29 @@ public class ChambreServiceImpl implements IChambreService{
     public long nbChambreParTypeEtBloc(TypeChambre type, long idBloc){
         return chambreRepository.findChambreByBloc_IdBlocAndAndTypeC(idBloc,type).toArray().length;
     }
-    // @Scheduled(cron= "*/2 * * * * *")
-    public Map<String, Float> pourcentageChambreParTypeChambre(){
-        List<Chambre> listB = chambreRepository.findAll();
-        float total = listB.stream().toArray().length;
-        for (int i=0;i<3;i++){
-            if (i==1) log.info("Simple " + chambreRepository.getNbrTypeC(TypeChambre.SIMPLE)*100/total);
-            if (i==1) log.info("Double " + chambreRepository.getNbrTypeC(TypeChambre.DOUBLE)*100/total);
-            if (i==1) log.info("Triple " + chambreRepository.getNbrTypeC(TypeChambre.TRIPLE)*100/total);
-        }
-        return null;
-    }
+   // @Scheduled(cron= "*/2 * * * * *")
+   public Map<TypeChambre, Double> pourcentageChambreParTypeChambre() {
+       List<Chambre> chambres = chambreRepository.findAll();
+       int total = chambres.size();
+
+       if (total == 0) {
+           return new EnumMap<>(TypeChambre.class); // Retourne une EnumMap vide si aucune chambre
+       }
+
+       Map<TypeChambre, Double> pourcentages = new EnumMap<>(TypeChambre.class);
+
+       for (TypeChambre type : TypeChambre.values()) {
+           long count = chambres.stream()
+                   .filter(c -> c.getTypeC() == type)
+                   .count();
+           double percentage = (count * 100.0) / total;
+           pourcentages.put(type, percentage);
+           log.info("{} {}%", type, percentage);
+       }
+
+       return pourcentages;
+   }
+
     // @Scheduled(cron= "*/2 * * * * *")
     public void nbPlacesDisponiblesParChambreAnneeEnCours(){
         List<Chambre> listB = chambreRepository.findChambreByReservations_AnneeUniversitaire_Year(Year.now().getValue());

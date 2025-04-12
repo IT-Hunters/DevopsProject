@@ -9,8 +9,8 @@ public interface IReservationService {
     List<Reservation> retrieveAllReservations();
     Reservation addReservation(Reservation r);
     Reservation updateReservation(Reservation r);
-    Reservation retrieveReservation(String idReservation);
-    void removeReservation(String idReservation);
+
+
     List<Reservation> getReservationParAnneeUniversitaire(Date dateDebut, Date dateFin );
     Reservation ajouterReservationEtAssignerAChambreEtAEtudiant (Reservation res, Long numChambre, long cin);
 }

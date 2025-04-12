@@ -15,5 +15,5 @@ public interface IChambreService {
     void removeChambre(Long idChambre);
     List<Chambre> getChambresParNomBloc( String nomBloc);
     long nbChambreParTypeEtBloc( TypeChambre type, long idBloc) ;
-    public Map<String, Float> pourcentageChambreParTypeChambre();
+    public Map<TypeChambre, Double> pourcentageChambreParTypeChambre();
 }

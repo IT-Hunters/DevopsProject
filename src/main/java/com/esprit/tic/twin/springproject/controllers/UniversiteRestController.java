@@ -1,9 +1,9 @@
 package com.esprit.tic.twin.springproject.controllers;
 
-import com.esprit.tic.twin.springproject.entities.Foyer;
+
 import com.esprit.tic.twin.springproject.entities.Universite;
 import com.esprit.tic.twin.springproject.services.IUniversiteService;
-import jakarta.websocket.server.PathParam;
+
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +36,7 @@ public class UniversiteRestController {
     }
     @PutMapping("/affecter-foyer-unviversite/{idFoyer}/{nom}")
     public Universite affectUniversite(@PathVariable("idFoyer") Long idFoyer, @PathVariable("nom") String nom){
-        System.out.println(nom);
+
         return universiteService.affecterFoyerAUniversite(idFoyer,nom);
     }
     @PutMapping("/desaffecter-foyer-unviversite/{idFoyer}")

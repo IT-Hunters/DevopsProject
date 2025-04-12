@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -20,9 +21,10 @@ public class EtudiantRestController {
         return etudiantService.affecterEtudiantAReservation(nomEt,prenomEt,idReservation);
     }
     @GetMapping("/calculNouveauMontantInscriptionDesEtudiants")
-    public HashMap<String,Float> calculNouveauMontantInscriptionDesEtudiants(){
+    public Map<String, Float> calculNouveauMontantInscriptionDesEtudiants() {
         return etudiantService.calculNouveauMontantInscriptionDesEtudiants();
     }
+
     @GetMapping("/calculTopPerformingStudentsByTaches/{topN}")
     public List<Etudiant> calculTopPerformingStudentsByTaches(@PathVariable("topN") int topN){
         return etudiantService.calculTopPerformingStudentsByTaches(topN);

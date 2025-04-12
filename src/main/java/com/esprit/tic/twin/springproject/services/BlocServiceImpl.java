@@ -22,14 +22,15 @@ public class BlocServiceImpl implements IBlocService{
     public Bloc affecterChambresABloc(List<Long> numChambre, String nomBloc){
         Bloc bloc = blocRepository.findByNomBloc(nomBloc);
         List<Chambre> listeChambre = numChambre.stream()
-                        .map(num -> chambreRepository.findById(num).get())
-                                .collect(Collectors.toList());
+                .map(num -> chambreRepository.findById(num).get())
+                .toList();
+
         listeChambre.forEach(ch -> ch.setBloc(bloc));
         chambreRepository.saveAll(listeChambre);
         return bloc;
     }
 
-   // @Scheduled(cron= "*/2 * * * * *")
+    // @Scheduled(cron= "*/2 * * * * *")
     public void listeChambresParBloc(){
         List<Bloc> listB = blocRepository.findAll();
         for (Bloc bloc : listB) {

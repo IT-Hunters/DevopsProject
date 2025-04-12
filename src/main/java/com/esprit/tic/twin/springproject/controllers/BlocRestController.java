@@ -45,7 +45,7 @@ public class BlocRestController {
 
     @PutMapping("/affecter-chambres-bloc/{nomBloc}")
     public void affecteChambresAbloc(@RequestBody List<Long> numChambres, @PathVariable("nomBloc") String nomBloc) {
-        System.out.println(nomBloc);
+
         blocService.affecterChambresABloc(numChambres,nomBloc);
     }
 

@@ -8,7 +8,7 @@ import com.esprit.tic.twin.springproject.repositories.ChambreRepository;
 import com.esprit.tic.twin.springproject.repositories.EtudiantRepository;
 import com.esprit.tic.twin.springproject.repositories.ReservationRepository;
 import com.esprit.tic.twin.springproject.services.ChambreServiceImpl;
-import com.esprit.tic.twin.springproject.services.IChambreService;
+
 import com.esprit.tic.twin.springproject.services.ReservationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -112,59 +112,37 @@ class DEvopsProjectApplicationTests {
 	@Test
 	void testPourcentageChambreParTypeChambre() {
 		// Arrange
-		// Simuler le comportement de chambreRepository.findAll()
 		List<Chambre> chambres = Arrays.asList(
 				new Chambre(1L, TypeChambre.SIMPLE),
-				new Chambre(2L, TypeChambre.DOUBLE),
-				new Chambre(3L, TypeChambre.TRIPLE),
-				new Chambre(4L, TypeChambre.SIMPLE)
+				new Chambre(2L, TypeChambre.SIMPLE),
+				new Chambre(3L, TypeChambre.DOUBLE),
+				new Chambre(4L, TypeChambre.TRIPLE)
 		);
 		when(chambreRepository.findAll()).thenReturn(chambres);
 
-		// Simuler le comportement de chambreRepository.getNbrTypeC()
-		when(chambreRepository.getNbrTypeC(TypeChambre.SIMPLE)).thenReturn(2.0F); // 2 chambres SIMPLE
-		when(chambreRepository.getNbrTypeC(TypeChambre.DOUBLE)).thenReturn(1.0F); // 1 chambre DOUBLE
-		when(chambreRepository.getNbrTypeC(TypeChambre.TRIPLE)).thenReturn(1.0F); // 1 chambre TRIPLE
-
 		// Act
-		Map<String, Float> result = chambreService.pourcentageChambreParTypeChambre();
+		Map<TypeChambre, Double> result = chambreService.pourcentageChambreParTypeChambre();
 
 		// Assert
-		Map<String, Float> expected = new HashMap<>();
-		expected.put("SIMPLE", 50.0f);
-		expected.put("DOUBLE", 25.0f);
-		expected.put("TRIPLE", 25.0f);
+		Map<TypeChambre, Double> expected = new EnumMap<>(TypeChambre.class);
 
-		assertEquals(expected, result, "Les pourcentages doivent correspondre aux valeurs attendues");
+		expected.put(TypeChambre.SIMPLE, 50.0);
+		expected.put(TypeChambre.DOUBLE, 25.0);
+		expected.put(TypeChambre.TRIPLE, 25.0);
 
-		// Afficher le résultat dans la console
-		System.out.println("Pourcentage des chambres par type: " + result);
-
-		// Vérification des appels aux méthodes du repository
-		verify(chambreRepository, times(1)).findAll();
-		verify(chambreRepository, times(1)).getNbrTypeC(TypeChambre.SIMPLE);
-		verify(chambreRepository, times(1)).getNbrTypeC(TypeChambre.DOUBLE);
-		verify(chambreRepository, times(1)).getNbrTypeC(TypeChambre.TRIPLE);
+		assertEquals(expected, result);
 	}
-
-
 
 	@Test
 	void testPourcentageChambreParTypeChambre_AucuneChambre() {
 		// Arrange
-		// Simuler une liste vide de chambres
 		when(chambreRepository.findAll()).thenReturn(List.of());
 
 		// Act
-		Map<String, Float> result = chambreService.pourcentageChambreParTypeChambre();
+		Map<TypeChambre, Double> result = chambreService.pourcentageChambreParTypeChambre();
 
 		// Assert
-		Map<String, Float> expected = new HashMap<>();
-		assertEquals(expected, result, "La map doit être vide si aucune chambre n'existe");
-
-		// Vérification des appels aux méthodes du repository
-		verify(chambreRepository, times(1)).findAll();
-		verify(chambreRepository, never()).getNbrTypeC(any()); // Aucun appel à getNbrTypeC
+		assertTrue(result.isEmpty());
 	}
 
 

@@ -23,7 +23,7 @@ public class ChambreRestController {
         return chambreService.nbChambreParTypeEtBloc(type,idBloc);
     }
     @GetMapping("/pourcentageChambreParTypeChambre")
-    public Map<String, Float> pourcentageChambreParTypeChambre(){
+    public Map<TypeChambre, Double> pourcentageChambreParTypeChambre(){
         return chambreService.pourcentageChambreParTypeChambre();
     }
 }

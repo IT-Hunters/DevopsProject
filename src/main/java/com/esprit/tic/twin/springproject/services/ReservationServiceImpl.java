@@ -3,18 +3,17 @@ package com.esprit.tic.twin.springproject.services;
 import com.esprit.tic.twin.springproject.entities.Chambre;
 import com.esprit.tic.twin.springproject.entities.Etudiant;
 import com.esprit.tic.twin.springproject.entities.Reservation;
-import com.esprit.tic.twin.springproject.entities.TypeChambre;
+
 import com.esprit.tic.twin.springproject.repositories.ChambreRepository;
 import com.esprit.tic.twin.springproject.repositories.EtudiantRepository;
 import com.esprit.tic.twin.springproject.repositories.ReservationRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 
 import java.time.Year;
-import java.util.Calendar;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -77,15 +76,9 @@ public class ReservationServiceImpl implements IReservationService {
         return reservationRepository.save(r);
     }
 
-    @Override
-    public Reservation retrieveReservation(String idReservation) {
-        return null;
-    }
+    
 
-    @Override
-    public void removeReservation(String idReservation) {
 
-    }
 
 
 }
