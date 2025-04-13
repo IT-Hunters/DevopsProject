@@ -96,7 +96,7 @@ public class EtudiantServiceImpl implements IEtudiantService{
     }
 
     public Etudiant affecterEtudiantAReservation (String nomEt, String prenomEt, String idReservation){
-        Etudiant et = etudiantRepository.findEtudiantByNomEtAndPrenomEt(nomEt,prenomEt).get();
+        Etudiant et = etudiantRepository.findByNomEtAndPrenomEt(nomEt,prenomEt).get();
         Reservation res = reservationRepository.findById(idReservation).get();
         List <Etudiant> listEt = new ArrayList<>(res.getEtudiants().stream().toList());
         System.out.println("listEt : " + listEt);

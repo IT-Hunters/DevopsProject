@@ -10,4 +10,5 @@ public interface ITacheService {
     Tache updateTache(Tache t);
     Tache retrieveTache(Long idTache);
     void removeTache(Long idTache);
+    double calculerTarif(Tache tache);
 }

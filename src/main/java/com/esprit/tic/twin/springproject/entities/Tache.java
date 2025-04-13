@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @ToString
 public class Tache implements Serializable {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTache;
     private LocalDate dateTache;
     private int duree;
@@ -26,7 +26,8 @@ public class Tache implements Serializable {
     private TypeTache typeTache;
     @ManyToOne
     Etudiant etudiantOrdinaire;
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "etudiant_responsable_id")
     private Etudiant etudiantResponsable;
+    private double tarifFinal; // Added field
 }
