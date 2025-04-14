@@ -10,6 +10,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/foyer")
+@CrossOrigin(origins = {"http://localhost:4201", "http://localhost:4200","http://localhost:80" })
 public class FoyerRestController {
     IFoyerService foyerService;
 
