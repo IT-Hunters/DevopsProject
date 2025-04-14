@@ -163,7 +163,7 @@
         </repository>
         <snapshotRepository>
             <id>nexus-snapshots</id>
-            <name>Nexus Snapshots</name>
+            <name>maven-snapshots</name>
             <url>http://localhost:8081/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
