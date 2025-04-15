@@ -9,7 +9,7 @@ FROM openjdk:17-jdk-alpine
 
 WORKDIR /app
 
-COPY --from=build /app/target/SpringProject-1.0.0-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/SpringProject-1.0.0.jar app.jar
 
 EXPOSE 8089
 
