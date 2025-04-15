@@ -10,6 +10,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/taches")
+@CrossOrigin(origins = "http://localhost:4200")
 public class TacheRestController {
     ITacheService tacheService;
 
