@@ -11,20 +11,20 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/projet?createDatabaseIfNotExist=true
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=""  # Set to empty string to match MySQL root password
+      - SPRING_DATASOURCE_PASSWORD=""
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
 
   frontend:
     image: assilhammami/devopsrepository-frontend:latest
     ports:
-      - "4200:80"  # Map host port 4200 to container port 80 (NGINX default)
+      - "4200:80"
 
   mysql:
     image: mysql:8.0
     environment:
-      - MYSQL_ROOT_PASSWORD=""  # Set empty root password
+      - MYSQL_ROOT_PASSWORD=""
       - MYSQL_DATABASE=projet
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true  # Explicitly allow empty password
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
     ports:
       - "3306:3306"
     volumes:
