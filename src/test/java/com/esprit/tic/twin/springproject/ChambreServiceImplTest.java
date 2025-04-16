@@ -1,8 +1,7 @@
 package com.esprit.tic.twin.springproject;
 
-
-
 import com.esprit.tic.twin.springproject.entities.Chambre;
+
 import com.esprit.tic.twin.springproject.entities.TypeChambre;
 import com.esprit.tic.twin.springproject.repositories.ChambreRepository;
 import com.esprit.tic.twin.springproject.services.ChambreServiceImpl;
@@ -12,10 +11,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,9 +28,9 @@ class ChambreServiceImplTest {
     @InjectMocks
     private ChambreServiceImpl chambreService;
 
-    // ✅ Test 1 : nbChambreParTypeEtBloc
+    // Test 1: nbChambreParTypeEtBloc - Normal case
     @Test
-     void testNbChambreParTypeEtBloc() {
+    void testNbChambreParTypeEtBloc() {
         TypeChambre type = TypeChambre.SIMPLE;
         long blocId = 1L;
 
@@ -43,11 +44,26 @@ class ChambreServiceImplTest {
 
         long result = chambreService.nbChambreParTypeEtBloc(type, blocId);
         assertEquals(2, result);
+        verify(chambreRepository).findChambreByBloc_IdBlocAndTypeC(blocId, type);
     }
 
-    // ✅ Test 2 : addChambre
+    // Test 2: nbChambreParTypeEtBloc - Empty list
     @Test
-     void testAddChambre() {
+    void testNbChambreParTypeEtBloc_EmptyList() {
+        TypeChambre type = TypeChambre.SIMPLE;
+        long blocId = 1L;
+
+        when(chambreRepository.findChambreByBloc_IdBlocAndTypeC(blocId, type))
+                .thenReturn(List.of());
+
+        long result = chambreService.nbChambreParTypeEtBloc(type, blocId);
+        assertEquals(0, result);
+        verify(chambreRepository).findChambreByBloc_IdBlocAndTypeC(blocId, type);
+    }
+
+    // Test 3: addChambre - Normal case
+    @Test
+    void testAddChambre() {
         Chambre chambre = new Chambre();
         chambre.setTypeC(TypeChambre.DOUBLE);
 
@@ -55,11 +71,20 @@ class ChambreServiceImplTest {
 
         Chambre saved = chambreService.addChambre(chambre);
         assertEquals(TypeChambre.DOUBLE, saved.getTypeC());
+        verify(chambreRepository).save(chambre);
     }
 
-    // ✅ Test 3 : pourcentageChambreParTypeChambre
+    // Test 4: addChambre - Null input
     @Test
- void testPourcentageChambreParTypeChambre() {
+    void testAddChambre_NullInput() {
+        Chambre saved = chambreService.addChambre(null);
+        assertNull(saved);
+        verify(chambreRepository, never()).save(any(Chambre.class));
+    }
+
+    // Test 5: pourcentageChambreParTypeChambre - Normal case
+    @Test
+    void testPourcentageChambreParTypeChambre() {
         List<Chambre> allChambres = List.of(
                 new Chambre(1L, TypeChambre.SIMPLE),
                 new Chambre(2L, TypeChambre.SIMPLE),
@@ -77,5 +102,134 @@ class ChambreServiceImplTest {
         assertEquals(50f, result.get("SIMPLE"));
         assertEquals(25f, result.get("DOUBLE"));
         assertEquals(25f, result.get("TRIPLE"));
+        verify(chambreRepository).findAll();
+        verify(chambreRepository).getNbrTypeC(TypeChambre.SIMPLE);
+        verify(chambreRepository).getNbrTypeC(TypeChambre.DOUBLE);
+        verify(chambreRepository).getNbrTypeC(TypeChambre.TRIPLE);
     }
+
+    // Test 6: pourcentageChambreParTypeChambre - Empty list
+    @Test
+    void testPourcentageChambreParTypeChambre_EmptyList() {
+        when(chambreRepository.findAll()).thenReturn(List.of());
+
+        Map<String, Float> result = chambreService.pourcentageChambreParTypeChambre();
+
+        assertEquals(0f, result.get("SIMPLE"));
+        assertEquals(0f, result.get("DOUBLE"));
+        assertEquals(0f, result.get("TRIPLE"));
+        verify(chambreRepository).findAll();
+        verify(chambreRepository, never()).getNbrTypeC(any(TypeChambre.class));
+    }
+
+    
+
+
+    // Test 8: retrieveAllChambres - Normal case
+    @Test
+    void testRetrieveAllChambres() {
+        List<Chambre> mockChambres = List.of(
+                new Chambre(1L, TypeChambre.SIMPLE),
+                new Chambre(2L, TypeChambre.DOUBLE)
+        );
+        when(chambreRepository.findAll()).thenReturn(mockChambres);
+
+        List<Chambre> result = chambreService.retrieveAllChambres();
+        assertEquals(2, result.size());
+        assertEquals(mockChambres, result);
+        verify(chambreRepository).findAll();
+    }
+
+    // Test 9: getChambresParNomBloc - Normal case
+    @Test
+    void testGetChambresParNomBloc() {
+        String nomBloc = "Bloc A";
+        List<Chambre> mockChambres = List.of(
+                new Chambre(1L, TypeChambre.SIMPLE),
+                new Chambre(2L, TypeChambre.DOUBLE)
+        );
+        when(chambreRepository.findChambreByBloc_NomBloc(nomBloc)).thenReturn(mockChambres);
+
+        List<Chambre> result = chambreService.getChambresParNomBloc(nomBloc);
+        assertEquals(2, result.size());
+        assertEquals(mockChambres, result);
+        verify(chambreRepository).findChambreByBloc_NomBloc(nomBloc);
+    }
+
+    // Test 10: getChambresParNomBloc - Null input
+    @Test
+    void testGetChambresParNomBloc_NullInput() {
+        List<Chambre> result = chambreService.getChambresParNomBloc(null);
+        assertTrue(result.isEmpty());
+        verify(chambreRepository).findChambreByBloc_NomBloc(null);
+    }
+
+    // Test 11: updateChambre - Normal case
+    @Test
+    void testUpdateChambre() {
+        Chambre chambre = new Chambre(1L, TypeChambre.SIMPLE);
+        chambre.setTypeC(TypeChambre.DOUBLE);
+
+        when(chambreRepository.save(chambre)).thenReturn(chambre);
+
+        Chambre updated = chambreService.updateChambre(chambre);
+        assertEquals(TypeChambre.DOUBLE, updated.getTypeC());
+        verify(chambreRepository).save(chambre);
+    }
+
+    // Test 12: updateChambre - Null input
+    @Test
+    void testUpdateChambre_NullInput() {
+        Chambre updated = chambreService.updateChambre(null);
+        assertNull(updated);
+        verify(chambreRepository, never()).save(any(Chambre.class));
+    }
+
+    // Test 13: retrieveChambre - Found
+    @Test
+    void testRetrieveChambre_Found() {
+        Long idChambre = 1L;
+        Chambre chambre = new Chambre(idChambre, TypeChambre.SIMPLE);
+        when(chambreRepository.findById(idChambre)).thenReturn(Optional.of(chambre));
+
+        Chambre result = chambreService.retrieveChambre(idChambre);
+        assertNotNull(result);
+        assertEquals(chambre, result);
+        verify(chambreRepository).findById(idChambre);
+    }
+
+    // Test 14: retrieveChambre - Not found
+    @Test
+    void testRetrieveChambre_NotFound() {
+        Long idChambre = 1L;
+        when(chambreRepository.findById(idChambre)).thenReturn(Optional.empty());
+
+        Chambre result = chambreService.retrieveChambre(idChambre);
+        assertNull(result);
+        verify(chambreRepository).findById(idChambre);
+    }
+
+    // Test 15: removeChambre - Normal case
+    @Test
+    void testRemoveChambre() {
+        Long idChambre = 1L;
+        chambreService.removeChambre(idChambre);
+        verify(chambreRepository).deleteById(idChambre);
+    }
+
+    // Test 16: findAvailableChambresForCapacity - Normal case
+
+
+    // Test 17: findAvailableChambresForCapacity - Negative capacity
+    @Test
+    void testFindAvailableChambresForCapacity_NegativeCapacity() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            chambreService.findAvailableChambresForCapacity(-1, TypeChambre.SIMPLE);
+        });
+        assertEquals("La capacité minimale ne peut pas être négative", exception.getMessage());
+        verify(chambreRepository, never()).findChambreByTypeC(any(TypeChambre.class));
+    }
+
+
+
 }
