@@ -1,0 +1,70 @@
+version: '3.8'
+services:
+  nexus:
+    image: sonatype/nexus3
+    container_name: nexus2
+    ports:
+      - "8081:8081"
+    networks:
+      - devops-network
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_ROOT_HOST=%
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - devops-network
+    restart: unless-stopped
+  sonarqube:
+        image: sonarqube:lts-community
+        container_name: sonarqube2
+        ports:
+          - "9000:9000"
+        volumes:
+          - sonarqube-data:/opt/sonarqube/data
+          - sonarqube-logs:/opt/sonarqube/logs
+          - sonarqube-extensions:/opt/sonarqube/extensions
+        depends_on:
+          mysql:
+            condition: service_healthy
+        networks:
+          - devops-network
+        restart: unless-stopped
+  spring-app:
+    image: youssefbenarous247/devopsproject
+    container_name: spring-app
+    ports:
+      - "8089:8089"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/springdb?createDatabaseIfNotExist=true&useUnicode=true&>      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=com.mysql.cj.jdbc.Driver
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - devops-network
+    restart: unless-stopped
+
+networks:
+  devops-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  sonarqube-data:
+  sonarqube-logs:
+  sonarqube-extensions:
