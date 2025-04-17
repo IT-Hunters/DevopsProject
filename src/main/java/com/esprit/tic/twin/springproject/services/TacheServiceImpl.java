@@ -1,6 +1,6 @@
 package com.esprit.tic.twin.springproject.services;
 
-import com.esprit.tic.twin.springproject.entities.Etudiant;
+
 import com.esprit.tic.twin.springproject.entities.Tache;
 
 import com.esprit.tic.twin.springproject.repositories.EtudiantRepository;
