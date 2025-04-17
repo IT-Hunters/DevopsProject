@@ -1,11 +1,9 @@
-version: '3.8'
 services:
   mysql:
     image: mysql:8.0
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
       - MYSQL_DATABASE=foyer
-
     ports:
       - "3307:3306"
     volumes:
@@ -22,13 +20,13 @@ services:
 
   spring-app:
     build:
-      context: ./DevopsProject
+      context: .
       dockerfile: Dockerfile
-    image: devops-spring-app:latest
+    image: devops spring-app:latest
     ports:
       - "8090:8089"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/foyer_db?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/foyer?createDatabaseIfNotExist=true
       - SPRING_DATASOURCE_USERNAME=foyer_user
       - SPRING_DATASOURCE_PASSWORD=foyerpass
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
@@ -42,13 +40,13 @@ services:
 
   angular-app:
     build:
-      context: ./foyer-angular
+      context: ../foyer-angular
       dockerfile: Dockerfile
     image: devops-angular-app:latest
     ports:
       - "4201:80"
     environment:
-      - API_URL=http://localhost:8090
+      - API_URL=http://spring-app:8089
     depends_on:
       - spring-app
     networks:
@@ -57,10 +55,6 @@ services:
 
 volumes:
   mysql-data:
-  sonarqube_data:
-  sonarqube_extensions:
-  sonarqube_logs:
-  nexus-data:
 
 networks:
   app-network:
