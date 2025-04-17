@@ -9,9 +9,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/springdb?createDatabaseIfNotExist=true&useUnicode=true&>      - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_DATASOURCE_DRIVER-CLASS-NAME=com.mysql.cj.jdbc.Driver
-    depends_on:
-      mysql:
-        condition: service_healthy
     networks:
       - devops-network
     restart: unless-stopped
