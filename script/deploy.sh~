@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /mnt/c/Users/Lenovo/Projet-Devops/Deploy
+docker pull borji1234/elyess_borji_4twin4:latest
+docker compose up -d app mysql

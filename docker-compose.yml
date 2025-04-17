@@ -1,0 +1,105 @@
+
+
+services:
+
+  jenkins:
+    image: myjenkins-docker
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./jenkins-settings/settings.xml:/var/jenkins_home/.m2/settings.xml
+      - ./:/app  #  Donne accès à Jenkins à tout ton projet (y compris docker-compose.yml)
+    networks:
+      - devops-net
+
+  sonar:
+    image: sonarqube
+    container_name: sonar
+    ports:
+      - "9000:9000"
+    volumes:
+      - sonar-data:/opt/sonarqube/data
+      - sonar-extensions:/opt/sonarqube/extensions
+      - sonar-logs:/opt/sonarqube/logs
+    networks:
+      - devops-net
+
+  nexus:
+    image: sonatype/nexus3
+    container_name: nexus
+    ports:
+      - "8081:8081"
+    volumes:
+      - nexus-data:/nexus-data
+    networks:
+      - devops-net
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - devops-net
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - devops-net
+
+  app:
+    image: borji1234/elyess_borji_4twin4:latest
+    container_name: spring-app
+    ports:
+      - "8082:8089"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/springdb?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root   # Correspond au mot de passe MySQL
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - mysql
+    networks:
+      - devops-net
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root   # Définir ici le mot de passe root
+      - MYSQL_DATABASE=springdb    # Nom de la base de données à créer
+    volumes:
+      - mysql-data:/var/lib/mysql  # Volume pour la persistance des données
+    networks:
+      - devops-net
+
+volumes:
+  jenkins_home:
+    external: true
+  nexus-data:
+  sonar-data:
+  sonar-extensions:
+  sonar-logs:
+  grafana-data:
+  mysql-data:
+
+networks:
+  devops-net:
+    driver: bridge
