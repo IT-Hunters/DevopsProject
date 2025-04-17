@@ -2,16 +2,17 @@ package com.esprit.tic.twin.springproject.services;
 
 import com.esprit.tic.twin.springproject.entities.Etudiant;
 import com.esprit.tic.twin.springproject.entities.Tache;
-import com.esprit.tic.twin.springproject.entities.TypeTache;
+
 import com.esprit.tic.twin.springproject.repositories.EtudiantRepository;
 import com.esprit.tic.twin.springproject.repositories.TacheRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
-
+@Slf4j
 @Service
 @AllArgsConstructor
 public class TacheServiceImpl implements ITacheService {
@@ -50,7 +51,7 @@ public class TacheServiceImpl implements ITacheService {
         if (tacheRepository.existsById(id)) {
             tacheRepository.deleteById(id);
         } else {
-            throw new RuntimeException("Tache not found with id: " + id);
+            log.info("Tachee not found with id: " + id);
         }
     }
 

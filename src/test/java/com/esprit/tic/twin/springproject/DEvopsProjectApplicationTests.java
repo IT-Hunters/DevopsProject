@@ -10,6 +10,7 @@ import com.esprit.tic.twin.springproject.repositories.ReservationRepository;
 import com.esprit.tic.twin.springproject.services.ChambreServiceImpl;
 
 import com.esprit.tic.twin.springproject.services.ReservationServiceImpl;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +32,7 @@ class DEvopsProjectApplicationTests {
 
 	@Mock
 	private ChambreRepository chambreRepository;
+
 	@InjectMocks
 	private ChambreServiceImpl chambreService;
 	@Mock
@@ -80,6 +82,33 @@ class DEvopsProjectApplicationTests {
 		verify(etudiantRepository, times(1)).findByCin(12345678L);
 		verify(reservationRepository, times(1)).save(reservation);
 		verify(chambreRepository, times(1)).save(chambre);
+	}
+	@Test
+	void testAjouterReservationEtAssignerAChambreEtAEtudiant_ChambreNonTrouvee() {
+		when(chambreRepository.chercherParNumero(999L)).thenReturn(Optional.empty());
+
+		// Changez EntityNotFoundException en IllegalArgumentException
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(reservation, 999L, 12345678L);
+		});
+
+		assertEquals("Chambre non trouvée avec le numéro : 999", exception.getMessage());
+		verify(chambreRepository, times(1)).chercherParNumero(999L);
+		verify(etudiantRepository, never()).findByCin(anyLong());
+	}
+
+	@Test
+	void testAjouterReservationEtAssignerAChambreEtAEtudiant_EtudiantNonTrouve() {
+		when(chambreRepository.chercherParNumero(101L)).thenReturn(Optional.of(chambre));
+		when(etudiantRepository.findByCin(99999999L)).thenReturn(Optional.empty());
+
+		// Changez EntityNotFoundException en IllegalArgumentException
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(reservation, 101L, 99999999L);
+		});
+
+		assertEquals("Étudiant non trouvé avec le CIN : 99999999", exception.getMessage());
+		verify(etudiantRepository, times(1)).findByCin(99999999L);
 	}
 
 	@Test
