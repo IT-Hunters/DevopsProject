@@ -33,7 +33,7 @@
         <!-- SonarQube properties -->
         <sonar.projectKey>SpringProject</sonar.projectKey>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.login>squ_d10f617acda4094a080e65159ed4677dc03e3ad3</sonar.login>
+        <sonar.login>squ_ee38799d03cc513b7a582eb4a38e056deb38f422</sonar.login>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.exclusions>**/test/**</sonar.exclusions>
@@ -86,6 +86,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
         </dependency>
 
     </dependencies>
