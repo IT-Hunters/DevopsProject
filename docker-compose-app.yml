@@ -6,7 +6,8 @@ services:
     ports:
       - "8089:8089"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/springdb?createDatabaseIfNotExist=true&useUnicode=true&>      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/springdb?createDatabaseIfNotExist=true&useUnicode=true&character
+      - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_DATASOURCE_DRIVER-CLASS-NAME=com.mysql.cj.jdbc.Driver
     networks:
