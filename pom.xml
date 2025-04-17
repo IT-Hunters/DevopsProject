@@ -112,7 +112,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin SonarQube -->
+            <!-- Plugin SonarQubeee -->
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
