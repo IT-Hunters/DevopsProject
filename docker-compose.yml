@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   mysql:
     image: mysql:8.0
@@ -19,10 +21,7 @@ services:
     restart: unless-stopped
 
   spring-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: devops-spring-app:latest
+    image: dienbi/borjidhia_4twin4_ithunters_devopsproject:latest  # <-- Use pushed image
     ports:
       - "8090:8089"
     environment:
@@ -39,10 +38,7 @@ services:
     restart: unless-stopped
 
   angular-app:
-    build:
-      context: ../foyer-angular
-      dockerfile: Dockerfile
-    image: devops-angular-app:latest
+    image: dienbi/devops-angular-app:latest  # <-- Use pushed image
     ports:
       - "4201:80"
     environment:
