@@ -51,6 +51,18 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Spring Boot Actuator (for Prometheus metrics) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Micrometer Prometheus Registry (for exposing Prometheus metrics) -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+
         <!-- Tests -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -98,7 +110,8 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Plugin Spring Boot -->
+
+            <!-- Spring Boot Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -112,14 +125,12 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin SonarQube -->
+            <!-- SonarQube Plugin -->
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.10.0.2594</version>
             </plugin>
-
-
         </plugins>
     </build>
 
