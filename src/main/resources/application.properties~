@@ -6,7 +6,10 @@ spring.datasource.username=root
 spring.datasource.password=
 spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+<<<<<<< HEAD
+=======
 
+>>>>>>> 67b9c89a7128b20a3b2d8fff6b109f0d4ebc9c35
 
 ### JPA / HIBERNATE ###
 spring.jpa.show-sql=true
@@ -15,7 +18,7 @@ spring.jpa.hibernate.ddl-auto=update
 ### Server configuration ###
 server.port=8089
 server.servlet.context-path=/projet
-
+<<<<<<< HEAD
 
 ### Spring Boot Actuator (Expose Prometheus Metrics) ###
 management.endpoints.web.exposure.include=health,info,prometheus
@@ -23,4 +26,5 @@ management.endpoint.prometheus.enabled=true
 
 # Enable Actuator endpoints (optional if you want them on a different port)
 management.server.port=8081
-
+=======
+>>>>>>> 67b9c89a7128b20a3b2d8fff6b109f0d4ebc9c35
