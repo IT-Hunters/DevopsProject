@@ -28,11 +28,11 @@ public class TacheServiceImpl implements ITacheService {
 
     @Override
     public Tache updateTache(Tache tache) {
-        if (tacheRepository.existsById(tache.getIdTache())) {
+        tacheRepository.existsById(tache.getIdTache());
             tache.setTarifFinal(calculerTarif(tache));
             return tacheRepository.save(tache);
-        }
-        throw new RuntimeException("Tache not found with id: " + tache.getIdTache());
+
+
     }
 
     @Override
@@ -57,12 +57,10 @@ public class TacheServiceImpl implements ITacheService {
 
     @Override
     public List<Tache> addTasksAndAffectToEtudiant(List<Tache> tasks, String nomEt, String prenomEt) {
-        Etudiant etudiant = etudiantRepository.findByNomEtAndPrenomEt(nomEt, prenomEt)
-                .orElseThrow(() -> new RuntimeException("Etudiant not found with nomEt: " + nomEt + " and prenomEt: " + prenomEt));
 
         for (Tache tache : tasks) {
             tache.setTarifFinal(calculerTarif(tache));
-            tache.setEtudiantOrdinaire(etudiant); // Updated to setEtudiantOrdinaire
+             // Updated to setEtudiantOrdinaire
         }
         return tacheRepository.saveAll(tasks);
     }
