@@ -1,7 +1,6 @@
 package com.esprit.tic.twin.springproject.controllers;
 
 import com.esprit.tic.twin.springproject.entities.Reservation;
-import com.esprit.tic.twin.springproject.entities.Tache;
 import com.esprit.tic.twin.springproject.services.IReservationService;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,7 +19,7 @@ public class ReservationRestController {
         return reservationService.getReservationParAnneeUniversitaire(dateDebut,dateFin);
     }
 
-@PostMapping("ajouterReservationEtAssignerAChambreEtAEtudiant/{numChambre}/{cin}")
+    @PostMapping("ajouterReservationEtAssignerAChambreEtAEtudiant/{numChambre}/{cin}")
     public Reservation ajouterReservationEtAssignerAChambreEtAEtudiant(@RequestBody Reservation res,@PathVariable Long numChambre, @PathVariable long cin){
         return reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(res,numChambre,cin);
     }

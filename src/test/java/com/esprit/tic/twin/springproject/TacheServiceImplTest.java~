@@ -1,0 +1,70 @@
+package com.esprit.tic.twin.springproject;
+
+import com.esprit.tic.twin.springproject.entities.Etudiant;
+import com.esprit.tic.twin.springproject.entities.Tache;
+import com.esprit.tic.twin.springproject.entities.TypeTache;
+import com.esprit.tic.twin.springproject.services.ITacheService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@SpringBootTest
+@ActiveProfiles("test")
+@Transactional
+public class TacheServiceImplTest {
+
+    @Autowired
+    private ITacheService tacheService;
+
+    @Autowired
+    private EntityManager entityManager;
+
+    @Test
+    public void testCalculateTotalTaskCostForStudent() {
+        System.out.println("Starting JUnit test for calculateTotalTaskCostForStudent");
+
+        // Arrange: Set up test data
+        Etudiant student = new Etudiant();
+        student.setNomEt("Alice");
+        student.setPrenomEt("Smith");
+        student.setCin(12345678L);
+        entityManager.persist(student);
+        System.out.println("Student created with ID: " + student.getIdEtudiant());
+
+        Tache task1 = new Tache();
+        task1.setDateTache(LocalDate.now());
+        task1.setDuree(2);           // 2 hours
+        task1.setTarifHoraire(10.0f); // 10 per hour
+        task1.setTypeTache(TypeTache.MENAGERE);
+        task1.setEtudiantOrdinaire(student);
+        entityManager.persist(task1);
+        System.out.println("Task 1 created: 2 hours * 10 = 20");
+
+        Tache task2 = new Tache();
+        task2.setDateTache(LocalDate.now());
+        task2.setDuree(3);           // 3 hours
+        task2.setTarifHoraire(15.0f); // 15 per hour
+        task2.setTypeTache(TypeTache.JARDINAGE);
+        task2.setEtudiantResponsable(student);
+        entityManager.persist(task2);
+        System.out.println("Task 2 created: 3 hours * 15 = 45");
+
+        entityManager.flush();
+
+        // Act: Call the method
+        float totalCost = tacheService.calculateTotalTaskCostForStudent(student.getIdEtudiant());
+        System.out.println("Calculated total cost: " + totalCost);
+
+        // Assert: Verify the result (2 * 10 + 3 * 15 = 20 + 45 = 65)
+        assertEquals(65.0f, totalCost, 0.01f, "Total cost should be 65 for the student");
+        System.out.println("JUnit test passed: Total cost is 65 as expected");
+    }
+}

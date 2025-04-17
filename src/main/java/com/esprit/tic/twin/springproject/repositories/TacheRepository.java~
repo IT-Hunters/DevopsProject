@@ -3,8 +3,5 @@ package com.esprit.tic.twin.springproject.repositories;
 import com.esprit.tic.twin.springproject.entities.Tache;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
 public interface TacheRepository extends JpaRepository<Tache, Long> {
-    List<Tache> findByEtudiantOrdinaireIdEtudiantOrEtudiantResponsableIdEtudiant(Long etudiantOrdinaireId, Long etudiantResponsableId);
 }

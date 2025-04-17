@@ -13,21 +13,18 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class TacheServiceImpl implements ITacheService {
+public class TacheServiceImpl implements ITacheService{
     TacheRepository tacheRepository;
     EtudiantRepository etudiantRepository;
-
-    @Override
-    public List<Tache> addTasksAndAffectToEtudiant(List<Tache> tasks, String nomEt, String prenomEt) {
+    public List<Tache> addTasksAndAffectToEtudiant (List<Tache> tasks, String nomEt, String prenomEt ){
         tacheRepository.saveAll(tasks);
-        Etudiant et = etudiantRepository.findEtudiantByNomEtAndPrenomEt(nomEt, prenomEt).get();
-        List<Tache> oldTaches = new ArrayList<>(et.getTaches().stream().toList());
-        oldTaches.addAll(tasks);
-        et.setTaches(oldTaches.stream().collect(Collectors.toSet()));
+        Etudiant et =  etudiantRepository.findEtudiantByNomEtAndPrenomEt(nomEt,prenomEt).get();
+        List<Tache> Oldtaches = new ArrayList<>(et.getTaches().stream().toList());
+        Oldtaches.addAll(tasks);
+        et.setTaches(Oldtaches.stream().collect(Collectors.toSet()));
         etudiantRepository.save(et);
         return et.getTaches().stream().toList();
     }
-
     @Override
     public List<Tache> retrieveAllTaches() {
         return tacheRepository.findAll();
@@ -51,14 +48,5 @@ public class TacheServiceImpl implements ITacheService {
     @Override
     public void removeTache(Long idTache) {
         tacheRepository.deleteById(idTache);
-    }
-
-    @Override
-    public float calculateTotalTaskCostForStudent(Long idEtudiant) {
-        // Fetch tasks where the student is either etudiantOrdinaire or etudiantResponsable
-        List<Tache> tasks = tacheRepository.findByEtudiantOrdinaireIdEtudiantOrEtudiantResponsableIdEtudiant(idEtudiant, idEtudiant);
-        return (float) tasks.stream()
-                .mapToDouble(tache -> tache.getDuree() * tache.getTarifHoraire())
-                .sum();
     }
 }
