@@ -17,7 +17,7 @@ spec:
           image: "youssefbenarous247/devopsproject:latest"
           env:
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:mysql://mysql:3306/springdb?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8"
+              value: "jdbc:mysql://host.docker.internal:3307/springdb?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8"
             - name: SPRING_DATASOURCE_USERNAME
               value: "root"
             - name: SPRING_DATASOURCE_PASSWORD
