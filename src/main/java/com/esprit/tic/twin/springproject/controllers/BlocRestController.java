@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/bloc")
+@RequestMapping("/blocs")
 public class BlocRestController {
     IBlocService blocService;
 
