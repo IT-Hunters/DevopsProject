@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/foyer")
-@CrossOrigin(origins = "*") // or keep the global one and remove this
+@CrossOrigin(origins = "http://localhost:4201")
 public class FoyerRestController {
     IFoyerService foyerService;
 

@@ -22,13 +22,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: devops spring-app:latest
+    image: devops-spring-app:latest
     ports:
       - "8090:8089"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/foyer?createDatabaseIfNotExist=true
-      - SPRING_DATASOURCE_USERNAME=foyer_user
-      - SPRING_DATASOURCE_PASSWORD=foyerpass
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect
     depends_on:
