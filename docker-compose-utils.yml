@@ -61,8 +61,8 @@ services:
 
 networks:
   devops-network:
-    driver: bridge
     external: true
+
 volumes:
   mysql-data:
   sonarqube-data:
