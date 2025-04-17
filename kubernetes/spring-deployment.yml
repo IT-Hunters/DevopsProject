@@ -15,5 +15,14 @@ spec:
       containers:
         - name: spring-app
           image: "youssefbenarous247/devopsproject:latest"
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/springdb?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "root"
+            - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+              value: "com.mysql.cj.jdbc.Driver"
           ports:
             - containerPort: 8089
