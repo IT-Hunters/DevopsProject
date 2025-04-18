@@ -44,7 +44,11 @@ public class BlocRestControllerTest {
     @Test
     void testRetrieveAllBlocs() throws Exception {
         // Arrange
-        List<Bloc> blocs = Arrays.asList(bloc, new Bloc(2L, "Bloc B", 200L, null, null));
+        Bloc bloc2 = new Bloc();
+        bloc2.setIdBloc(2L);
+        bloc2.setNomBloc("Bloc B");
+        bloc2.setCapaciteBloc(200L);
+        List<Bloc> blocs = Arrays.asList(bloc, bloc2);
         when(blocService.retrieveAllBlocs()).thenReturn(blocs);
 
         // Act & Assert

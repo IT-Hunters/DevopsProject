@@ -34,7 +34,7 @@ public class BlocServiceImpl implements IBlocService{
         List<Bloc> listB = blocRepository.findAll();
         for (Bloc bloc : listB) {
             log.info("Capacite Bloc" + bloc.getCapaciteBloc());
-           /*  for (Chambre ch : bloc.getChambres()){
+           /* for (Chambre ch : bloc.getChambres()){
                 log.info("NumChambre " + ch.getNumeroChambre());
                 log.info("Type " + ch.getTypeC());
             }*/
