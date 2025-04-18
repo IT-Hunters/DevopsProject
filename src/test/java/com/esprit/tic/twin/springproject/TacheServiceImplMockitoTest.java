@@ -43,6 +43,7 @@ public class TacheServiceImplMockitoTest {
         double expected = 149.04; // 20.0 * 6 * 1.15 * 1.2 * 0.9
         double tariff = tacheService.calculerTarif(tache);
         assertEquals(expected, tariff, 0.01, "Tariff should match expected value for holiday and duration discount");
+        System.out.println("Test testCalculTarif_JourFerieEtReduction passed successfully!");
     }
 
     // Test 2: calculerTarif - Non-holiday, no discount
@@ -61,6 +62,7 @@ public class TacheServiceImplMockitoTest {
         verify(tacheMock, times(2)).getDuree();
         verify(tacheMock, times(1)).getTypeTache();
         verify(tacheMock, times(1)).getDateTache();
+        System.out.println("Test testCalculTarif_NonHolidayNoDiscount_Mock passed successfully!");
     }
 
     // Test 3: calculerTarif - Holiday, no discount (duration <= 5)
@@ -153,6 +155,7 @@ public class TacheServiceImplMockitoTest {
         assertEquals(1L, result.getIdTache());
         assertEquals(149.04, result.getTarifFinal(), 0.01);
         verify(tacheRepository, times(1)).save(any(Tache.class));
+        System.out.println("Test testAddTache passed successfully!");
     }
 
     // Test 8: updateTache - Success
