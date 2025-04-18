@@ -10,6 +10,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/bloc")
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:80","http://172.29.176.160:4200","http://172.29.176.160:80"}, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class BlocRestController {
     IBlocService blocService;
 
