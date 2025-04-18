@@ -5,12 +5,12 @@ import com.esprit.tic.twin.springproject.services.IFoyerService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+import java.util.List;//
+//@CrossOrigin(origins = "http://172.26.251.79:4202")
 @RestController
 @AllArgsConstructor
 @RequestMapping("/foyer")
-@CrossOrigin(origins = "http://172.26.251.79:4202")
+
 public class FoyerRestController {
     IFoyerService foyerService;
 
