@@ -7,7 +7,7 @@ import com.esprit.tic.twin.springproject.repositories.EtudiantRepository;
 import com.esprit.tic.twin.springproject.repositories.ReservationRepository;
 import com.esprit.tic.twin.springproject.repositories.TacheRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
+
 import org.springframework.stereotype.Service;
 
 import java.time.Year;
@@ -36,10 +36,7 @@ public class EtudiantServiceImpl implements IEtudiantService{
                                 .reduce(0.0F, Float::sum),(old,neww) ->old, HashMap::new));
     }
     @Override
-    //@Scheduled(fixedRate = 3000) chaque 3sec
-    //@Scheduled(cron="*/60 * * * * *, zone="Europe/Istanbul") place du temps
-    //@Scheduled(fixedDelay = 2000)
-    //@Scheduled(cron = "* * 9 31 12 *")
+
     public void updateNouveauMontantInscriptionDesEtudiants(){
         HashMap<String,Float> calcHash = calculNouveauMontantInscriptionDesEtudiants();
         List <Etudiant> liste = etudiantRepository.findAll();
@@ -54,27 +51,7 @@ public class EtudiantServiceImpl implements IEtudiantService{
         );
         etudiantRepository.saveAll(liste);
     }
-    // Map pour stocker le nombre d'assurances par bénéficiaire (clef : cin, valeur : nombre d'assurances)
-   /* private final Map<Integer, Integer> assurances = new ConcurrentHashMap<>();
 
-    // Méthode qui simule l'ajout du nombre d'assurances pour les bénéficiaires
-    public void addAssurance(int cin) {
-        assurances.merge(cin, 1, Integer::sum);
-    }
-
-    // Méthode déclenchée toutes les 60 secondes pour afficher les statistiques
-    @Scheduled(fixedRate = 60000)
-    public void statistiques() {
-        TreeMap<Integer, Integer> sortedAssurances = new TreeMap<>(Collections.reverseOrder()); // TreeMap inversée pour le tri décroissant
-
-        sortedAssurances.putAll(assurances); // Remplir le TreeMap avec les données des assurances
-
-        System.out.println("Statistiques des assurances par bénéficiaire :");
-
-        for (Map.Entry<Integer, Integer> entry : sortedAssurances.entrySet()) {
-            System.out.println("Bénéficiaire CIN: " + entry.getKey() + ", Nombre d'assurances: " + entry.getValue());
-        }
-    }*/
     @Override
     public List<Etudiant> calculTopPerformingStudentsByTaches(int topN) {
         List<Etudiant> listEtudiants = etudiantRepository.findAll();
