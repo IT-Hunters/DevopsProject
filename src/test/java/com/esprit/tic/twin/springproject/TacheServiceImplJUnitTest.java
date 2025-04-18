@@ -23,6 +23,7 @@ public class TacheServiceImplJUnitTest {
         double expected = 149.04; // 20.0 * 6 * 1.15 * 1.2 * 0.9
         double tariff = tacheService.calculerTarif(tache);
         assertEquals(expected, tariff, 0.01, "Tariff should match expected value for holiday and duration discount");
+        System.out.println("Test testCalculTarif_JourFerieEtReduction passed successfully!");
     }
 
     // Test 2: calculerTarif - Non-holiday, no discount
@@ -32,6 +33,7 @@ public class TacheServiceImplJUnitTest {
         double expected = 82.5; // 25.0 * 3 * 1.10
         double tariff = tacheService.calculerTarif(tache);
         assertEquals(expected, tariff, 0.01, "Tariff should match expected value for non-holiday, no discount");
+        System.out.println("Test testCalculTarif_NonHolidayNoDiscount passed successfully!");
     }
 
     // Test 3: calculerTarif - Holiday, no discount (duration <= 5)
@@ -77,6 +79,7 @@ public class TacheServiceImplJUnitTest {
         // Since tacheRepository is null, calling addTache will throw a NullPointerException
         assertThrows(NullPointerException.class, () -> tacheService.addTache(tache),
                 "Should throw NullPointerException due to null repository");
+        System.out.println("Test testAddTache passed successfully!");
     }
 
     // Test 8: updateTache - Cannot test repository interaction without mocking
