@@ -76,7 +76,8 @@
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -126,6 +127,7 @@
                         <configuration>
                             <formats>
                                 <format>XML</format> <!-- For SonarQube -->
+                                <format>HTML</format>
                             </formats>
                         </configuration>
                     </execution>
@@ -144,9 +146,9 @@
                 <configuration>
                     <includes>
                         <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
                         <include>**/*MockTest.java</include>
                     </includes>
-                    <!-- Ensure tests run reliably -->
                     <argLine>-Xmx512m</argLine>
                 </configuration>
                 <dependencies>
