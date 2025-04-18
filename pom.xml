@@ -15,7 +15,7 @@
 
     <groupId>com.esprit.tic.twin</groupId>
     <artifactId>SpringProject</artifactId>
-    <version>1.0.0</version>
+     <version>1.0.0-SNAPSHOT</version>
     <name>SpringProject</name>
     <description>SpringProject</description>
 
