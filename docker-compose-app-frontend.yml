@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  angular-app:
+    image: youssefbenarous247/devopsprojectfrontend:latest
+    container_name: angular-app
+    ports:
+      - "80:80"
+    networks:
+      - devops-network
+    restart: unless-stopped
+
+networks:
+  devops-network:
+    external: true
