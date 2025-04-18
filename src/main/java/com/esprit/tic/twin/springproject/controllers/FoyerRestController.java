@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/foyer")
-@CrossOrigin(origins = "http://http://172.26.251.79/:4202")
+@CrossOrigin(origins = "http://172.26.251.79:4202")
 public class FoyerRestController {
     IFoyerService foyerService;
 
