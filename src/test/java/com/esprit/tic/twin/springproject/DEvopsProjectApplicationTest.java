@@ -8,33 +8,27 @@ import com.esprit.tic.twin.springproject.repositories.ChambreRepository;
 import com.esprit.tic.twin.springproject.repositories.EtudiantRepository;
 import com.esprit.tic.twin.springproject.repositories.ReservationRepository;
 import com.esprit.tic.twin.springproject.services.ChambreServiceImpl;
-
 import com.esprit.tic.twin.springproject.services.ReservationServiceImpl;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.time.LocalDate;
-import java.util.*;
-
-import static org.mockito.Mockito.*;
-
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import java.time.LocalDate;
+import java.util.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
-class DEvopsProjectApplicationTests {
+class DEvopsProjectApplicationTest {
 
 	@Mock
 	private ChambreRepository chambreRepository;
 
 	@InjectMocks
 	private ChambreServiceImpl chambreService;
+
 	@Mock
 	private EtudiantRepository etudiantRepository;
 
@@ -75,7 +69,7 @@ class DEvopsProjectApplicationTests {
 
 		Reservation result = reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(reservation, 101L, 12345678L);
 
-		System.out.println("Test AjouterReservationEtAssignerAChambreEtAEtudiant  Succès");
+		System.out.println("Test AjouterReservationEtAssignerAChambreEtAEtudiant Succès");
 		System.out.println("Résultat: " + result);
 
 		verify(chambreRepository, times(1)).chercherParNumero(101L);
@@ -83,11 +77,11 @@ class DEvopsProjectApplicationTests {
 		verify(reservationRepository, times(1)).save(reservation);
 		verify(chambreRepository, times(1)).save(chambre);
 	}
+
 	@Test
 	void testAjouterReservationEtAssignerAChambreEtAEtudiant_ChambreNonTrouvee() {
 		when(chambreRepository.chercherParNumero(999L)).thenReturn(Optional.empty());
 
-		// Changez EntityNotFoundException en IllegalArgumentException
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(reservation, 999L, 12345678L);
 		});
@@ -102,7 +96,6 @@ class DEvopsProjectApplicationTests {
 		when(chambreRepository.chercherParNumero(101L)).thenReturn(Optional.of(chambre));
 		when(etudiantRepository.findByCin(99999999L)).thenReturn(Optional.empty());
 
-		// Changez EntityNotFoundException en IllegalArgumentException
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(reservation, 101L, 99999999L);
 		});
@@ -126,8 +119,10 @@ class DEvopsProjectApplicationTests {
 		reservation3.setAnneeUniversitaire(LocalDate.of(2024, 2, 10));
 		when(reservationRepository.findByAnneeUniversitaireBetween(dateDebut, dateFin))
 				.thenReturn(Arrays.asList(reservation1, reservation2));
+
 		List<Reservation> result = reservationService.getReservationParAnneeUniversitaire(dateDebut, dateFin);
-		System.out.println("Test GetReservationParAnneeUniversitaire  Succès");
+
+		System.out.println("Test GetReservationParAnneeUniversitaire Succès");
 		System.out.println("Nombre de réservations trouvées: " + result.size());
 		result.forEach(r -> System.out.println("Réservation: " + r.getIdReservation() + " Date: " + r.getAnneeUniversitaire()));
 		assertEquals(2, result.size());
@@ -140,7 +135,6 @@ class DEvopsProjectApplicationTests {
 
 	@Test
 	void testPourcentageChambreParTypeChambre() {
-		// Arrange
 		List<Chambre> chambres = Arrays.asList(
 				new Chambre(1L, TypeChambre.SIMPLE),
 				new Chambre(2L, TypeChambre.SIMPLE),
@@ -149,12 +143,9 @@ class DEvopsProjectApplicationTests {
 		);
 		when(chambreRepository.findAll()).thenReturn(chambres);
 
-		// Act
 		Map<TypeChambre, Double> result = chambreService.pourcentageChambreParTypeChambre();
 
-		// Assert
 		Map<TypeChambre, Double> expected = new EnumMap<>(TypeChambre.class);
-
 		expected.put(TypeChambre.SIMPLE, 50.0);
 		expected.put(TypeChambre.DOUBLE, 25.0);
 		expected.put(TypeChambre.TRIPLE, 25.0);
@@ -164,18 +155,10 @@ class DEvopsProjectApplicationTests {
 
 	@Test
 	void testPourcentageChambreParTypeChambre_AucuneChambre() {
-		// Arrange
 		when(chambreRepository.findAll()).thenReturn(List.of());
 
-		// Act
 		Map<TypeChambre, Double> result = chambreService.pourcentageChambreParTypeChambre();
 
-		// Assert
 		assertTrue(result.isEmpty());
 	}
-
-
-
-
-
 }
