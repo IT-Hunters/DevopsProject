@@ -25,6 +25,6 @@ public class Bloc implements Serializable {
     @ManyToOne
     @JsonIgnore
     Foyer foyer;
-    @OneToMany(mappedBy = "bloc",fetch = FetchType.EAGER)
-    private Set<Chambre> chambres;
+    /*@OneToMany(mappedBy = "bloc",fetch = FetchType.EAGER)
+    private Set<Chambre> chambres;*/
 }
