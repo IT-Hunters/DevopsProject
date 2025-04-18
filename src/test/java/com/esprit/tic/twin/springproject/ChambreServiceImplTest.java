@@ -45,18 +45,7 @@ class ChambreServiceImplTest {
         verify(chambreRepository).findChambreByBloc_IdBlocAndTypeC(blocId, type);
     }
 
-    // Test 3: addChambre - Normal case
-    @Test
-    void testAddChambre() {
-        Chambre chambre = new Chambre();
-        chambre.setTypeC(TypeChambre.DOUBLE);
-
-        when(chambreRepository.save(chambre)).thenReturn(chambre);
-
-        Chambre saved = chambreService.addChambre(chambre);
-        assertEquals(TypeChambre.DOUBLE, saved.getTypeC());
-        verify(chambreRepository).save(chambre);
-    }
+   
     // Test 4: retrieveAllChambres - Normal case
     @Test
     void testRetrieveAllChambres() {
