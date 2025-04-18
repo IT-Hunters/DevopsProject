@@ -14,7 +14,7 @@ import java.util.List;
         methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class BlocRestController {
     IBlocService blocService;
-/* f */
+
     @PostMapping("/add-bloc")
     public Bloc addBloc(@RequestBody Bloc b) {
         return blocService.addBloc(b);
